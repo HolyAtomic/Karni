@@ -9,7 +9,7 @@
       content="Karni : le carnet de crédit du hanout, sans papier ni connexion."
     />
     <link rel="stylesheet" href="assets/style.css" />
-    <script type="module" src="src/js/main.js"></script>
+    <script type="module" src="src/js/main.js" defer></script>
   </head>
 
   <body class="bg-karni-papier font-sans text-karni-encre antialiased">
@@ -233,6 +233,7 @@
     <!-- ================= FENÊTRE CLIENT : ajout et modification (US-01) ================= -->
     <dialog
       id="dialog-client"
+
       aria-labelledby="dialog-client-titre"
       class="m-auto w-[min(92vw,28rem)] rounded-lg border border-karni-bordure bg-white p-6 text-karni-encre backdrop:bg-karni-encre/50"
     >
@@ -282,6 +283,7 @@
         <div class="flex flex-wrap gap-3 pt-2">
           <button
             type="submit"
+            id="client-enregistrer"
             class="rounded bg-karni-bleu px-5 py-2 font-semibold text-white hover:bg-karni-bleu/90 focus:outline-2 focus:outline-offset-2 focus:outline-karni-bleu"
           >
             Enregistrer
