@@ -1,4 +1,5 @@
 import { creerDemo } from "./demo.js";
+import { showExistsClients } from "./clients.js";
 const inputRecherche = document.getElementById("recherche");
 const donneesDemo = creerDemo();
 const clients = donneesDemo.clients;
