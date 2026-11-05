@@ -108,7 +108,7 @@ export function clients() {
 }
 
 // show the existing clients in the list
-function showExistsClients() {
+export function showExistsClients(clientsToDisplay = clientsList) {
     if (clientsList.length === 0) {
         emptyShamp.classList.remove("hidden");
     } else {
@@ -117,7 +117,7 @@ function showExistsClients() {
 
     list.innerHTML = "";
 
-    clientsList.forEach((clt) => {
+    clientsToDisplay.forEach((clt) => {
         let clone = templateClient.content.cloneNode(true);
     
         clone.querySelector(".client-nom").textContent = clt.nom;
