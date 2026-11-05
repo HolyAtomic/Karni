@@ -1,8 +1,7 @@
-import { creerDemo } from "./demo.js";
 import { showExistsClients } from "./clients.js";
+import { data } from "./main.js";
+
 const inputRecherche = document.getElementById("recherche");
-const donneesDemo = creerDemo();
-const clients = donneesDemo.clients;
 
 export function rechercherClients(clients, recherche) {
   const rechercheMinuscule = recherche
@@ -21,6 +20,7 @@ export function rechercherClients(clients, recherche) {
 
 inputRecherche.addEventListener("input", () => {
   const recherche = inputRecherche.value;
+  const clients = data?.clients || [];
   const clientsFiltres = rechercherClients(clients, recherche);
   showExistsClients(clientsFiltres);
 });

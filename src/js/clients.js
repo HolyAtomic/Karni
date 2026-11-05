@@ -1,8 +1,5 @@
 import {creerDemo} from "./demo.js";
-
-let demo = creerDemo();
-let clientsList = demo.clients;
-let operationsList = demo.operations;
+import { data } from "./main.js";
 
 let templateClient = document.querySelector("#modele-client");
 let list = document.getElementById("liste-clients");
@@ -27,9 +24,15 @@ let telErreur = document.getElementById("client-telephone-erreur");
 let plafondErreur = document.getElementById("client-plafond-erreur");
 
 
+export function setClientsList(clients) {
+    if (Array.isArray(clients)) {
+        data.clients = clients;
+    }
+    localStorage.setItem("karni", JSON.stringify(data));
+}
 
 // this is the main function that will be called from main.js to initialize the clients module
-export function clients() {
+export function intiClients() {
     showExistsClients();
     
     // show the dialog when the user clicks on the "nouveau client" button
@@ -69,14 +72,13 @@ export function clients() {
     
         let btnUpdate = e.target.closest('[data-action="modifier-client"]');
         let btnDelete = e.target.closest('[data-action="supprimer-client"]');
-        let btnOpen = e.target.closest('[data-action="ouvrir-fiche"]');
         if (btnUpdate) {
             let el = btnUpdate.closest("[data-client-id]");
             if (!el) return;
         
             let clientId = el.dataset.clientId;
         
-            if (clientsList.find((clt) => clt.id === clientId)) {
+            if (data.clients.find((clt) => clt.id === clientId)) {
                 dialogClient.dataset.mode = "update";
                 dialogClient.dataset.clientId = clientId;
                 bringDataToDialog(clientId);
@@ -108,8 +110,10 @@ export function clients() {
 }
 
 // show the existing clients in the list
-export function showExistsClients(clientsToDisplay = clientsList) {
-    if (clientsList.length === 0) {
+export function showExistsClients(clientsToDisplay = data.clients) {
+    clientsToDisplay = clientsToDisplay || [];
+
+    if (clientsToDisplay.length === 0) {
         emptyShamp.classList.remove("hidden");
     } else {
         emptyShamp.classList.add("hidden");
@@ -117,6 +121,7 @@ export function showExistsClients(clientsToDisplay = clientsList) {
 
     list.innerHTML = "";
 
+    
     clientsToDisplay.forEach((clt) => {
         let clone = templateClient.content.cloneNode(true);
     
@@ -127,7 +132,7 @@ export function showExistsClients(clientsToDisplay = clientsList) {
         list.appendChild(clone);
     });
 
-    nbClients.textContent = clientsList.length;
+    nbClients.textContent = clientsToDisplay.length;
 }
 
 // take the client data from the form and return it as an object
@@ -145,25 +150,26 @@ function takeClientData() {
 function addClient(client) {
 
     if (dialogClient.dataset.mode === "update") {
-        clientsList = clientsList.filter((clt) => clt.id !== dialogClient.dataset.clientId);
+        data.clients = data.clients.filter((clt) => clt.id !== dialogClient.dataset.clientId);
     }
-
-    clientsList.push(client);
+    
+    data.clients.push(client);
+    setClientsList(data.clients);
     showExistsClients();
 }
 
 // validate the client data before adding it to the list
-function validateClientData(client) {
-    if (!client.telephone || client.telephone.trim() === "") {
+export function validateClientData(client) {
+    if (!client?.telephone || (typeof client.telephone === "string" && client.telephone.trim() === "")) {
         client.telephone = "Non renseigné";
     }
-    if (!client.plafond || client.plafond.trim() === "") {
+    if (!client?.plafond || (typeof client?.plafond === "string" && client.plafond.trim() === "")) {
         client.plafond = "Non renseigné";
     }
 
-    let nomvalid = client.nom.length > 0; 
-    let telvalid = client.telephone === "Non renseigné" || (client.telephone.length >= 2 && /^\d+$/.test(client.telephone));
-    let plafondvalid = client.plafond === "Non renseigné" || /^\d+$/.test(client.plafond);
+    let nomvalid = Boolean(client?.nom && typeof client?.nom === "string" && client.nom.trim().length > 0); 
+    let telvalid = client?.telephone === "Non renseigné" || (typeof client?.telephone === "string" && client.telephone.length >= 2 && /^\d+$/.test(client.telephone));
+    let plafondvalid = typeof client?.plafond === "number" || client?.plafond === "Non renseigné" || (typeof client.plafond === "string" && /^\d+$/.test(client.plafond));
     
     return {nomvalid, telvalid, plafondvalid};
 }
@@ -203,7 +209,7 @@ function showInvalidFieldsAddClient({nomvalid, telvalid, plafondvalid}) {
 }
 
 function bringDataToDialog(clientId) {
-    let client = clientsList.find((clt) => clt.id === clientId);
+    let client = data.clients.find((clt) => clt.id === clientId);
     if (client) {
         clientNom.value = client.nom;
         clientTelephone.value = client.telephone && client.telephone !== "Non renseigné" ? client.telephone : "";
@@ -214,7 +220,28 @@ function bringDataToDialog(clientId) {
 
 
 function deleteClient(clientId) {
-    clientsList = clientsList.filter((clt) => clt.id !== clientId);
+    data.clients = data.clients.filter((clt) => clt.id !== clientId);
     list.innerHTML = "";
+    setClientsList(data.clients);
     showExistsClients();
+}
+
+// get the karni data from localStorage or create demo data if not present
+export function localStorageCarni() {
+    let karni = localStorage.getItem("karni");
+
+    // if undefind return demo data
+    if (!karni) {
+        let d = creerDemo();
+        localStorage.setItem("karni", JSON.stringify(d));
+        return d;
+    }
+    try {
+        let data = JSON.parse(karni);
+        // if it is valid return the clients array
+        if (data && Array.isArray(data.clients) && data.clients.length > 0) {
+            return data;
+        }
+    } catch {}
+    return { clients : [] };
 }
