@@ -8,7 +8,7 @@ const clients = donneesDemo.clients;
 export function rechercherClients(clients, recherche) {
   const rechercheMinuscule = recherche
     .trim()
-    .toLowerCase()
+    .toLowerCase()  
     .normalize("NFD")
     .replace(/[\u0300-\u036f]/g, "");
   return clients.filter((client) =>

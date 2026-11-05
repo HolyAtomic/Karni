@@ -1,6 +1,8 @@
 import {creerDemo} from "./demo.js";
 
-let clientsList = creerDemo().clients;
+let demo = creerDemo();
+let clientsList = demo.clients;
+let operationsList = demo.operations;
 
 let templateClient = document.querySelector("#modele-client");
 let list = document.getElementById("liste-clients");
@@ -67,7 +69,7 @@ export function clients() {
     
         let btnUpdate = e.target.closest('[data-action="modifier-client"]');
         let btnDelete = e.target.closest('[data-action="supprimer-client"]');
-
+        let btnOpen = e.target.closest('[data-action="ouvrir-fiche"]');
         if (btnUpdate) {
             let el = btnUpdate.closest("[data-client-id]");
             if (!el) return;
