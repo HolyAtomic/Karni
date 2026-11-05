@@ -1,5 +1,4 @@
 import {creerDemo} from "./demo.js";
-import { ouvrirFiche } from "./fiche.js";
 
 let demo = creerDemo();
 let clientsList = demo.clients;
@@ -71,12 +70,6 @@ export function clients() {
         let btnUpdate = e.target.closest('[data-action="modifier-client"]');
         let btnDelete = e.target.closest('[data-action="supprimer-client"]');
         let btnOpen = e.target.closest('[data-action="ouvrir-fiche"]');
-        if (btnOpen) {
-            let el = btnOpen.closest("[data-client-id]");
-            let client = clientsList.find((c) => c.id === el.dataset.clientId);
-            ouvrirFiche(client, operationsList);
-            return;
-        }
         if (btnUpdate) {
             let el = btnUpdate.closest("[data-client-id]");
             if (!el) return;
