@@ -37,4 +37,44 @@ export function clienthistory(clientId, operation){
         return b.date.localeCompare(a.date)
     })
     return result
+<<<<<<< HEAD
+=======
+}
+export function parsing(input){
+    const text = input.trim().replace(',','.')
+    const regex = /^\d+(\.\d{1,2})?$/
+    if(!regex.test(text)){
+        return null
+    }
+    const splited = text.split('.')
+    let first = splited[0]
+    let second = splited[1]
+    if(second === undefined){
+        second = '00'
+    }
+    if(second.length === 1){
+        second += '0'
+    }
+    return Number(first) * 100 + Number(second)
+}
+export function moneyformat(centimes){
+    const all = Math.floor(centimes / 100)
+    let reste = centimes % 100
+    if(reste < 10){
+        reste = '0' + reste
+    }
+    return all + ',' + reste + ' MAD'
+}
+export function today(){
+    let d = new Date()
+    let month = d.getMonth() + 1 
+    let day = d.getDate()
+    if(month < 10){
+        month = '0' + month
+    }
+    if(day < 10){
+        day = '0' + day
+    }
+    return d.getFullYear() + '-' + month + '-' + day
+>>>>>>> cd1697296654b34c145436de25b8d324ea7ca4e3
 }
