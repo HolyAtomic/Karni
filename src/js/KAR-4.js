@@ -4,6 +4,7 @@ const inputRecherche = document.getElementById("recherche");
 const tri = document.getElementById("tri");
 const donneesDemo = creerDemo();
 const clients = donneesDemo.clients;
+const operations = donneesDemo.operations;
 
 export function rechercherClients(clients, recherche) {
   const rechercheMinuscule = recherche

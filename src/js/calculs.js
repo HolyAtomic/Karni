@@ -50,8 +50,7 @@ export function clienthistory(clientId, operation){
     })
 
     return result
-<<<<<<< HEAD
-=======
+
 }
 
 export function parsing(input){
@@ -102,11 +101,10 @@ export function today(){
     }
 
     return d.getFullYear() + '-' + month + '-' + day
-<<<<<<< HEAD
->>>>>>> cd1697296654b34c145436de25b8d324ea7ca4e3
+
 }
-=======
-}
+
+
 
 export function countclients(clients){
     return clients.length
@@ -218,4 +216,4 @@ export function isPlafondAtteint(client, operation){
 
     return false
 }
->>>>>>> 682c9bf0bcfb3aced9ea94d5bc8e388625693093
+
