@@ -1,6 +1,7 @@
 import {creerDemo} from "./demo.js";
 import { data } from "./main.js";
-
+import { soldclient, moneydispo, moneyformat } from "./calculs.js";
+import { afficherHistorique } from "./operation.js";
 let templateClient = document.querySelector("#modele-client");
 let list = document.getElementById("liste-clients");
 let emptyShamp = document.getElementById("etat-vide");
@@ -23,6 +24,13 @@ let nomErreur = document.getElementById("client-nom-erreur");
 let telErreur = document.getElementById("client-telephone-erreur");
 let plafondErreur = document.getElementById("client-plafond-erreur");
 
+let ficheClient = document.querySelector("#fiche-client");
+let ficheNom = document.querySelector("#fiche-nom");
+let ficheTelephone = document.querySelector("#fiche-telephone");
+let ficheFermer = document.querySelector("#fiche-fermer");
+let ficheSolde = document.querySelector("#fiche-solde");
+let fichePlafond = document.querySelector("#fiche-plafond");
+let ficheDisponible = document.querySelector("#fiche-disponible");
 
 export function setClientsList(clients) {
     if (Array.isArray(clients)) {
@@ -32,7 +40,7 @@ export function setClientsList(clients) {
 }
 
 // this is the main function that will be called from main.js to initialize the clients module
-export function intiClients() {
+export function intiClients() { 
     showExistsClients();
     
     // show the dialog when the user clicks on the "nouveau client" button
@@ -72,7 +80,27 @@ export function intiClients() {
     
         let btnUpdate = e.target.closest('[data-action="modifier-client"]');
         let btnDelete = e.target.closest('[data-action="supprimer-client"]');
-        if (btnUpdate) {
+        let btnOpen = e.target.closest('[data-action="ouvrir-fiche"]');
+        if (btnOpen) {
+    let el = btnOpen.closest("[data-client-id]");
+    if (!el) return;
+
+    let clientId = el.dataset.clientId;
+
+    clientSelectionne = data.clients.find(
+        (clt) => clt.id === clientId
+    );
+    if (!clientSelectionne)return;
+    afficherHistorique();
+    const solde = soldclient(
+    clientSelectionne.id,
+    data.operations
+);
+ficheSolde.textContent = moneyformat(solde);
+    ficheNom.textContent = clientSelectionne.nom;
+    ficheTelephone.textContent = clientSelectionne.telephone || "Non renseigné";
+    ficheClient.showModal();
+        } else if (btnUpdate) {
             let el = btnUpdate.closest("[data-client-id]");
             if (!el) return;
         
@@ -95,20 +123,31 @@ export function intiClients() {
     });
 
     // handle the confirmation dialog buttons
-    confirmationValidateBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        let clientId = e.target.dataset.clientId;
-        if (clientId) {
-            deleteClient(clientId);
-        }
-        confirmationDialog.close();
-    });
-    confirmationCancelBtn.addEventListener("click", (e) => {
-        e.preventDefault();
-        confirmationDialog.close();
-    });
-}
+confirmationValidateBtn.addEventListener("click", (e) => {
+    e.preventDefault();
 
+    const operationId = confirmationValidateBtn.dataset.operationId;
+    const clientId = confirmationValidateBtn.dataset.clientId;
+
+    if (operationId) {
+        data.operations = data.operations.filter(
+            op => op.id !== operationId
+        );
+        localStorage.setItem("karni", JSON.stringify(data));
+        delete confirmationValidateBtn.dataset.operationId;
+        afficherHistorique();
+    } else if (clientId) {
+        deleteClient(clientId);
+        delete confirmationValidateBtn.dataset.clientId;
+    }
+    confirmationDialog.close();
+});
+confirmationCancelBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    delete confirmationValidateBtn.dataset.operationId;
+    delete confirmationValidateBtn.dataset.clientId;
+    confirmationDialog.close();
+});
 // show the existing clients in the list
 export function showExistsClients(clientsToDisplay = data.clients) {
     clientsToDisplay = clientsToDisplay || [];
@@ -245,3 +284,4 @@ export function localStorageCarni() {
     } catch {}
     return { clients : [] };
 }
+export let clientSelectionne = null;
