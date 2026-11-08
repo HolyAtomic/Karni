@@ -4,7 +4,9 @@
 import "./KAR-4.js";
 import  { intiClients, localStorageCarni } from "./clients.js"
 import { importCarni } from "./import.js";
-
+import { initExport } from "./export.js";
 export let data = localStorageCarni()
+
 intiClients()
 importCarni()
+initExport(data)

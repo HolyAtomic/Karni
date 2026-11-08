@@ -1,6 +1,6 @@
 import {creerDemo} from "./demo.js";
 import { data } from "./main.js";
-import { soldclient, moneydispo, moneyformat } from "./calculs.js";
+import { soldclient, moneydispo, moneyformat,parsing } from "./calculs.js";
 import { afficherHistorique } from "./operation.js";
 let templateClient = document.querySelector("#modele-client");
 let list = document.getElementById("liste-clients");
@@ -56,7 +56,6 @@ export function intiClients() {
         formClient.reset();
         dialogClient.close();
     });
-
     // add new client on form submit
     formClient.addEventListener("submit", (e) => {
         e.preventDefault();
@@ -91,6 +90,9 @@ export function intiClients() {
         (clt) => clt.id === clientId
     );
     if (!clientSelectionne)return;
+    if (!Array.isArray(data.operations)) {
+    data.operations = [];
+}
     afficherHistorique();
     const solde = soldclient(
     clientSelectionne.id,
@@ -136,6 +138,11 @@ confirmationValidateBtn.addEventListener("click", (e) => {
         localStorage.setItem("karni", JSON.stringify(data));
         delete confirmationValidateBtn.dataset.operationId;
         afficherHistorique();
+        const solde = soldclient(
+    clientSelectionne.id,
+    data.operations
+);
+ficheSolde.textContent = moneyformat(solde);
     } else if (clientId) {
         deleteClient(clientId);
         delete confirmationValidateBtn.dataset.clientId;
@@ -148,6 +155,10 @@ confirmationCancelBtn.addEventListener("click", (e) => {
     delete confirmationValidateBtn.dataset.clientId;
     confirmationDialog.close();
 });
+ficheFermer.addEventListener("click", () => {
+    ficheClient.close();
+});
+}
 // show the existing clients in the list
 export function showExistsClients(clientsToDisplay = data.clients) {
     clientsToDisplay = clientsToDisplay || [];
