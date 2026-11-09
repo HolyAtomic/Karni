@@ -157,23 +157,29 @@ function ajouterOperation() {
     montantCentimes < 1 ||
     montantCentimes > 1000000
   ) {
-    montantErreur.textContent = "MOntant invalide;";
-    montantErreur.hidden = false;
+    montantErreur.textContent = "Il est impossible de dépasser le solde disponible.";
+montantErreur.hidden = false;
+montantErreur.classList.remove("hidden");
     return;
   }
   montantErreur.hidden = true;
+  montantErreur.classList.add("hidden")
   if (!date || date > today()) {
-    dateErreur.textContent = "date invalide.";
+    dateErreur.textContent = "L'achat ne sera pas possible à l'avenir.";
     dateErreur.hidden = false;
+    dateErreur.classList.remove("hidden");
     return;
   }
   dateErreur.hidden = true;
+  dateErreur.classList.add("hidden")
   if (libelle.length > 60 || (type === "achat" && libelle.length < 2)) {
-    libelleErreur.textContent = "libellé invalide.";
+    libelleErreur.textContent = "libellé obligatoire.";
     libelleErreur.hidden = false;
+    libelleErreur.classList.remove("hidden")
     return;
   }
   libelleErreur.hidden = true;
+  libelleErreur.classList.add("hidden")
   if (!clientSelectionne) return;
   if (!Array.isArray(data.operations)) {
     data.operations = [];
