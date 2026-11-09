@@ -1,5 +1,6 @@
 import { showExistsClients } from "./clients.js";
 import { data } from "./main.js";
+import { creerDemo } from "./demo.js";
 
 const inputRecherche = document.getElementById("recherche");
 const tri = document.getElementById("tri");

@@ -1,5 +1,6 @@
 import {creerDemo} from "./demo.js";
 import { data } from "./main.js";
+import { afficherOperation } from "./operation.js";
 
 let templateClient = document.querySelector("#modele-client");
 let list = document.getElementById("liste-clients");
@@ -69,7 +70,8 @@ export function intiClients() {
     // handle update and delete buttons in the client list
     list.addEventListener("click", (e) => {
         e.preventDefault();
-    
+        afficherOperation(e)
+
         let btnUpdate = e.target.closest('[data-action="modifier-client"]');
         let btnDelete = e.target.closest('[data-action="supprimer-client"]');
         if (btnUpdate) {
@@ -91,7 +93,7 @@ export function intiClients() {
 
             confirmationDialog.showModal();
             confirmationValidateBtn.dataset.clientId = el.dataset.clientId;
-        }
+        } 
     });
 
     // handle the confirmation dialog buttons
